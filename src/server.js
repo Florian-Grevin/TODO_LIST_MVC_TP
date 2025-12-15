@@ -1,5 +1,6 @@
 const app = require('./app');
-const PORT = 3000;
+const index = require('./config/index')
+const PORT = index.port;
 
 app.listen(PORT, function(err) {
    if (err) console.log(err);

@@ -1,17 +1,14 @@
 const todoService  = require('../services/todo.service')
-const todoAsyncHandler = require('../utils/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
     
-const getAllTodos = todoAsyncHandler(async (req, res) => { 
-    const toDos = todoService.findAll();
-    res.setHeader('Content-Type', 'text/json');
-    res.end(JSON.stringify(toDos));  
+const getAllTodos = asyncHandler(async (req, res) => { 
+    const toDos = await todoService.findAll();
+    res.status(200).json(toDos);  
 });
 
-const createTodo = todoAsyncHandler(async (req, res) => { 
-    const createtoDos = todoService.createTodos(req);
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/json');
-    res.end(JSON.stringify(createtoDos));
+const createTodo = asyncHandler(async (req, res) => { 
+    const newtoDo = await todoService.createTodos(req);
+    res.status(201).json(newtoDo);
 });
 
 module.exports = { getAllTodos, createTodo };

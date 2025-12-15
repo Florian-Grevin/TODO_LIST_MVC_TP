@@ -1,6 +1,10 @@
+//chargé .env
+
 const express = require('express');
 const todoMiddleware = require('./middlewares/logger.middleware');
 const todosRouter = require('./routes/todo.routes');
+const errorHandler = require('./errors/errorHandler');
+const {ApiError, NotFoundError, ValidationError} = require('./errors/ApiError');
 
 const app = express();
 
@@ -40,5 +44,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/todos', todosRouter);
+
+//404
+app.use((req, res, next) => {
+    next(new NotFoundError("Route introuvable"));
+});
+
+app.use(errorHandler);
 
 module.exports = app;
