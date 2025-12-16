@@ -1,22 +1,20 @@
-const todos = [
-    { id: 1, title: "Faire les courses", completed: false },
-    { id: 2, title: "Apprendre Node.js", completed: true }
-];
+const { EntitySchema } = require("typeorm");
 
-class TodoModel {
-    static findAll() {
-        return Promise.resolve(todos);
+module.exports = new EntitySchema({
+    name: "User", // Nom utilisé dans le code (repository)
+    tableName: "users", // Nom de la table SQL
+    columns: {
+    id: {
+    primary: true,
+    type: "int",
+    generated: true, // Auto-incrément
+    },
+    name: {
+    type: "varchar",
+    },
+    email: {
+    type: "varchar",
+    unique: true // Impossible d'avoir 2 fois le même email
     }
-
-    static create(todoData) {
-        const newTodo = {
-            id: todos.length + 1,
-            title: todoData.title,
-            completed: false
-        };
-        todos.push(newTodo);
-        return Promise.resolve(newTodo);
-    }
-}
-
-module.exports = TodoModel
+    },
+});
