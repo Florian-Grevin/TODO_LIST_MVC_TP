@@ -1,32 +1,43 @@
-const TodoModel = require('../models/todo.model');
-const { ValidationError } = require('../errors/ApiError');
-const AppDataSource = require('../config/data-source')
+const TodoModel = require('../models/todo.entity');
+const { ValidationError, NotFoundError } = require('../errors/ApiError');
+const AppDataSource = require('../config/data-source');
+const UserService = require('./user.service');
 
-
-class TodoService {
+class ToDoService {
     constructor() { 
-        this.userRepository = AppDataSource.getRepository("User")
+        this.todoRepository = AppDataSource.getRepository("Todo");
     }
+
     async findAll() {
-        
-        return await this.userRepository.find();
+        return await this.todoRepository.find();
     }
 
     async findOneBy(id) {
-        return "IDK " + id;
+        const todo = await this.todoRepository.findOne({ where: { id } });
+        if (!todo) {
+            throw new NotFoundError(`Le todo avec l'id ${id} n'existe pas`);
+        }
+        return todo;
     }
 
-    async create(data) {
-        if (!data.name || data.name.trim() === "") {
-            throw new ValidationError("Le nom est obligatoire");
+    async create(data, userId) {
+        if (!data.title || data.title.trim() === "") {
+            throw new ValidationError("Le titre est obligatoire");
         }
-        else if (!data.email || data.email.trim() === "") {
-            throw new ValidationError("Le mail est obligatoire");
+
+        const user = await UserService.findById(userId);
+        if (!user) {
+            throw new NotFoundError("L'utilisateur n'existe pas");
         }
-        const newUser = this.userRepository.create(data);
-        return await this.userRepository.save(newUser);
+
+        const todo = {
+            title: data.title,
+            user: { id: data.userId } 
+        };
+        const newTodo = this.todoRepository.create(todo);
+        return await this.todoRepository.save(newTodo);
     }
 }
 
-const todoService = new TodoService();
-module.exports = todoService
+const todoService = new ToDoService();
+module.exports = todoService;
