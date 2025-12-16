@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const UserRoutes = require('./routes/user.routes');
 const TodoRoutes = require('./routes/todo.routes');
+const TagsRoutes = require('./routes/tags.routes')
 const logger = require('./middlewares/logger.middleware');
 const errorHandler = require('./errors/errorHandler');
 
@@ -52,8 +53,23 @@ app.get('/', (req, res) => {
         <label for="userId">Utilisateur ID :</label>
         <input type="number" id="userId" name="userId" required><br><br>
 
+        <label for="tagIds">Tag ID :</label>
+        <input type="number" id="tagIds" name="tagIds" required><br><br>
+
         <button type="submit">Ajouter Todo</button>
     </form>
+
+    <h1>Tags</h1>
+    <a href="/api/tags">Liste des tags</a>
+
+    <!-- Formulaire pour ajouter un tag -->
+        <form id="tagForm" action="/api/tags" method="post">
+        <label for="label">Nom du tag :</label>
+        <input type="text" id="label" name="label" required><br><br>
+
+        <button type="submit">Ajouter Tag</button>
+    </form>
+
   </body>
 </html>
 
@@ -61,8 +77,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', UserRoutes);
-
 app.use('/api/todos', TodoRoutes);
+app.use('/api/tags', TagsRoutes);
 
 app.use(errorHandler);
 

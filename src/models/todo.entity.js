@@ -23,6 +23,11 @@ module.exports = new EntitySchema({
             target: "User", // La cible est l'entité User
             joinColumn: true, // TypeORM doit créer la colonne `userId` ici
             inverseSide: "todos" // Nom de la propriété chez le User (la liste)
+        },
+        tags: {
+            type: "many-to-many", // [IMPORTANT] On pointe vers la cible
+            target: "Tag", // La cible est l'entité User
+            inverseSide: "todos" // Nom de la propriété chez le User (la liste)
         }
     }
 });

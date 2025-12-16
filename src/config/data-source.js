@@ -1,6 +1,7 @@
 const { DataSource } = require("typeorm");
 const UserSchema = require("../models/user.entity");
 const TodoSchema = require("../models/todo.entity");
+const TagSchema = require("../models/tag.entity");
 
 // Configuration centralisée
 const AppDataSource = new DataSource({
@@ -8,9 +9,7 @@ const AppDataSource = new DataSource({
   database: "database.sqlite",    // Fichier SQLite créé automatiquement
   synchronize: true,              // Crée les tables automatiquement (à éviter en prod)
   logging: true,                  // Affiche les requêtes SQL
-  entities: [UserSchema, TodoSchema], // Chemin vers tes entités
-  //require('../models/user.entity');
-  //require('../models/user.service');
+  entities: [UserSchema, TodoSchema, TagSchema], // Chemin vers tes entités
 });
 
 module.exports = AppDataSource;
