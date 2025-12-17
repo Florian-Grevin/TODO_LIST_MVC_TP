@@ -9,22 +9,22 @@ usernameField: 'email', // Indiquez à Passport quel champ sert d'identifiant
 session: false // Désactivez les sessions (car on fait une API REST)
 },
 async (email, password, done) => {
+    try {
+        const userRepository = AppDataSource.getRepository("User");
+        const user = await userRepository.findOne({ where: { email: email } });
+        
+    // Si l'user n'existe pas OU si le mot de passe (bcrypt.compare) est faux :
+        const match = await bcrypt.compare(password, user.password);
+        if (!user || !match) {
+            return done(null, false, { message: 'Email ou mot de passe incorrect' });
+        }
 
-    const userRepository = AppDataSource.getRepository("User");
-    const user = await userRepository.findOne({ where: { email: email } });
-    
-// Si l'user n'existe pas OU si le mot de passe (bcrypt.compare) est faux :
-    bcrypt.compare(password, user.password, function(err, res) {
-        if (err){
-            return response.json({success: false, message: 'Le mail ou le mot de passe est erronée'});
-        }
-        if (res) {
-            // Si tout est bon :
-            return done(null, user);
-        } else {
-            return response.json({success: false, message: 'Le mail ou le mot de passe est erronée'});
-        }
-    });
+    // Succès
+      return done(null, user);    
+    }
+    catch (err) {
+      return done(err);
+    }
 }
 ));
 const jwtOptions = {
@@ -34,8 +34,16 @@ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 secretOrKey: process.env.JWT_SECRET
 };
 passport.use(new JwtStrategy(jwtOptions, async (payload, done) => {
-    const userId = userRepository.findOne({ where: { id: payload.id } });
-    if(userId && userId.trim()) return done(null, user);
-    else return done(null, false);
+  try {
+    const userRepository = AppDataSource.getRepository("User");
+    const user = await userRepository.findOne({ where: { id: payload.id } });
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  } catch (err) {
+    return done(err, false);
+  }
 }));
 };
