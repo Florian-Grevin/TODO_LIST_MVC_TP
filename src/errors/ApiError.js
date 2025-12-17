@@ -25,9 +25,24 @@ class UnauthorizedError extends ApiError {
     }
 }
 
+class ForbiddenError extends ApiError {
+    constructor(message = 'Accès interdit') {
+        super(403, message);
+    }
+}
+
+
+class ConflictError extends ApiError {
+    constructor(message = 'Requête non traitable en raison de conflit avec la ressource.') {
+        super(409, message);
+    }
+}
+
 module.exports = { 
     ApiError, 
     NotFoundError, 
     ValidationError, 
-    UnauthorizedError 
+    UnauthorizedError,
+    ConflictError,
+    ForbiddenError
 };

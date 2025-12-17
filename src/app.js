@@ -4,6 +4,7 @@ const express = require('express');
 const UserRoutes = require('./routes/user.routes');
 const TodoRoutes = require('./routes/todo.routes');
 const TagsRoutes = require('./routes/tags.routes')
+const AuthRoutes = require('./routes/auth.routes')
 const logger = require('./middlewares/logger.middleware');
 const errorHandler = require('./errors/errorHandler');
 const passport = require('passport');
@@ -84,6 +85,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', UserRoutes);
 app.use('/api/todos', TodoRoutes);
 app.use('/api/tags', TagsRoutes);
+app.use('/api/auth', AuthRoutes);
 
 app.use(errorHandler);
 

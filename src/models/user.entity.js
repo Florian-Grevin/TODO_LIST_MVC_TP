@@ -15,7 +15,14 @@ module.exports = new EntitySchema({
     email: {
         type: "varchar",
     unique: true // Impossible d'avoir 2 fois le même email
-    }
+    },
+    password: {
+        type: "varchar",
+    },
+    role: {
+        type: "varchar",
+        default: 'USER'
+    },
     },
     relations: {
         todos: {
