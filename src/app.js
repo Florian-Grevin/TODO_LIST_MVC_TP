@@ -6,12 +6,17 @@ const TodoRoutes = require('./routes/todo.routes');
 const TagsRoutes = require('./routes/tags.routes')
 const logger = require('./middlewares/logger.middleware');
 const errorHandler = require('./errors/errorHandler');
+const passport = require('passport');
 
 const app = express();
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
+
+
 
 //Routes
 app.get('/', (req, res) => {
